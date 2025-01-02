@@ -1,0 +1,56 @@
+@if (countries) {
+<label for="bdaylocation-country">
+    Country where you were born
+    <select name="bdaylocation-country" id="bdaylocation-country" [(ngModel)]="selectedCountryIndex"
+        (ngModelChange)="getStates(countries[$event])">
+        @for (country of countries; track country.id; let i = $index) {
+        <option value={{i}}>
+            {{ country.name }}
+        </option>
+        }
+    </select>
+</label>
+@if (selectedCountryIndex) {
+<div>
+    {{ getCountryNameByIndex(selectedCountryIndex) }}
+</div>
+}
+@if (selectedCountryIndex && states) {
+<label for="bdaylocation-state">
+    State where you were born
+    <select name="bdaylocation-state" id="bdaylocation-state" [(ngModel)]="selectedStateIndex"
+        (ngModelChange)="getCities(countries[selectedCountryIndex].states[$event])">
+        @for (state of states; track state.id; let i = $index) {
+        <option value={{i}}>
+            {{ state.name }}
+        </option>
+        }
+    </select>
+</label>
+}
+@if (selectedStateIndex) {
+<div>
+    {{ getStateNameByIndex(selectedStateIndex) }}
+</div>
+}
+@if (selectedCountryIndex && selectedStateIndex && cities) {
+<label for="bdaylocation-city">
+    City where you were born
+    <select name="bdaylocation-city" id="bdaylocation-city" [(ngModel)]="selectedCityIndex"
+        (ngModelChange)="setBirthLoc(countries[selectedCountryIndex].states[selectedStateIndex].cities[$event].latitude, countries[selectedCountryIndex].states[selectedStateIndex].cities[$event].longitude)">
+        @for (city of cities; track city.name; let i = $index) {
+        <option value={{i}}>
+            {{ city.name }}
+        </option>
+        }
+    </select>
+</label>
+}
+@if (selectedCityIndex) {
+<div>
+    {{ getCityNameByIndex(selectedCityIndex) }}
+</div>
+}
+} @else {
+Loading...
+}

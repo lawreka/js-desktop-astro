@@ -1,0 +1,32 @@
+:host {
+    --darkblue: #010036;
+    --yellow: #f3ff60;
+    --font-big: 48px;
+    --font-medium: 24px;
+    --font-small: 12px;
+}
+
+.main {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    /* background-color: var(--darkblue);
+    color: var(--yellow); */
+    font-family: monospace;
+    /* font-size: var(--font-big); */
+}
+
+.big {
+    font-size: var(--font-big);
+}
+
+.medium {
+    font-size: var(--font-medium);
+}
+
+.small {
+    font-size: var(--font-small);
+}
