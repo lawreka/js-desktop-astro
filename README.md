@@ -8,5 +8,5 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 
 ## Run in electron
 
-```npm run electron-build``
+```npm run electron-build```
 
