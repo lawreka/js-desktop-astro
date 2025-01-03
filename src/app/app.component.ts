@@ -1,11 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { BdayForm } from './bdayform.component';
 import { AstroService } from './astro.service';
+import { NavComponent } from './nav.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, BdayForm],
+  imports: [RouterOutlet, NavComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

@@ -16,26 +16,56 @@ interface State {
     cities: City[];
 }
 
+interface Timezone {
+    abbreviation?: string;
+    gmtOffset?: number;
+    gmtOffsetName?: string;
+    tzName: string;
+    zoneName: string;
+}
+
 interface Country {
     name: string;
     id: string;
     latitude: string;
     longitude: string;
-    states: State[]
+    states: State[];
+    timezones: Timezone[];
 }
 
 @Component({
     selector: 'bday-form',
     imports: [FormsModule],
-    templateUrl: './bdayform.component.html'
+    templateUrl: './bdayform.component.html',
+    styleUrl: './bdayform.component.css'
 })
 export class BdayForm implements OnInit {
+    uuid = crypto.randomUUID()
+    name: string = ''
+    setName(name: string) {
+        this.name = name
+    }
+    birthday: string = ''
+    setBday(bday: string) {
+        this.birthday = bday
+    }
+    birthtime: string = ''
+    setBtime(btime: any) {
+        this.birthtime = btime
+    }
+    birthCountry: Country | null = null
+    birthState: State | null = null
+    birthCity: City | null = null
+    birthloc: { lat: string; lon: string } = { lat: '', lon: '' }
+    birthTZ: Timezone | null = null
+    birthTZindex: number | null = null
+    timezones: Timezone[] | null = null
     countries: Country[] | null = null
     getCountries() {
         fetch('./countries+states+cities.json')
             .then((response) => response.json())
             .then((json) => {
-                console.log(json)
+                // console.log(json)
                 this.countries = json
                 return json
             }
@@ -61,39 +91,66 @@ export class BdayForm implements OnInit {
         const city = this.cities?.[idx]
         return city?.name || ''
     }
-    resetStatesAndCities() {
-        this.selectedStateIndex = null;
+    resetTimezonesStatesAndCities() {
+        this.birthTZ = null
+        this.timezones = null
+        this.birthState = null
+        this.selectedStateIndex = null
         this.states = null
-        this.selectedCityIndex = null;
+        this.birthCity = null
+        this.selectedCityIndex = null
         this.cities = null
     }
     resetCities() {
-        this.selectedCityIndex = null;
-        this.cities = null;
+        this.birthCity = null
+        this.selectedCityIndex = null
+        this.cities = null
     }
-    getStates(country: Country) {
-        this.resetStatesAndCities()
+    setBirthCountry(country: Country) {
+        this.resetTimezonesStatesAndCities()
+        this.birthCountry = country
+        const timezones = country.timezones
+        if (timezones.length == 1) {
+            this.birthTZ = country.timezones[0]
+        } else {
+            this.timezones = country.timezones
+        }
+        const { latitude, longitude } = country
+        this.setBirthLoc(latitude, longitude)
         const states = country.states
-        console.log(states)
         if (states.length > 0) {
             this.states = states
-        } else {
-            const { latitude, longitude } = country;
-            this.setBirthLoc(latitude, longitude)
         }
     }
-    getCities(state: State) {
+    setBirthState(state: State) {
         this.resetCities()
+        this.birthState = state
+        const { latitude, longitude } = state
+        this.setBirthLoc(latitude, longitude)
         const cities = state.cities
-        console.log(cities)
         if (cities.length > 0) {
             this.cities = cities
-        } else {
-            const { latitude, longitude } = state;
-            this.setBirthLoc(latitude, longitude)
         }
     }
+    setBirthCity(city: City) {
+        this.birthCity = city
+        const { latitude, longitude } = city
+        this.setBirthLoc(latitude, longitude)
+    }
     setBirthLoc(latitude: string, longitude: string) {
-        console.log("Born at ", latitude, longitude)
+        this.birthloc = { lat: latitude, lon: longitude }
+    }
+    setBirthTZ(timezone: Timezone) {
+        this.birthTZ = timezone
+    }
+    calculateChart(): void {
+        console.log(this.name)
+        console.log(this.birthday)
+        console.log(this.birthtime)
+        console.log(this.birthCountry)
+        console.log(this.birthState)
+        console.log(this.birthCity)
+        console.log(this.birthloc)
+        console.log(this.birthTZ)
     }
 }
