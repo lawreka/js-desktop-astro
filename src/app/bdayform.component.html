@@ -1,31 +1,10 @@
 <label for="name">
     Name
-    <input id="name" [(ngModel)]="name" type="text" (ngModelChange)="setName($event)">
+    <input id="name" [(ngModel)]="formState.name" type="text" (ngModelChange)="setName($event)">
 </label>
 <label for="bday-date">
     Birth day
-    <input id="bday-date" [(ngModel)]="birthday" type="date" (ngModelChange)="setBday($event)">
-</label>
-<label for="bday-time">
-    Birth time
-    <input id="bday-time" [(ngModel)]="birthtime" type="time" (ngModelChange)="setBtime($event)">
-    @if (birthTZ) {
-    {{ birthTZ.zoneName }}
-    }
-    @if (timezones) {
-    <label for="birth-tz">
-        Time zone:
-        <select id="birth-tz" [(ngModel)]="birthTZindex" (ngModelChange)="setBirthTZ(timezones[$event])">
-            @for (tz of timezones; track tz.zoneName; let i = $index) {
-            <option value={{i}}>
-                {{ tz.zoneName }}
-            </option>
-            }
-        </select>
-    </label>
-
-    }
-
+    <input id="bday-date" [(ngModel)]="formState.bDay" type="date" (ngModelChange)="setBday($event)">
 </label>
 <label for="location">
     Birth location
@@ -78,7 +57,6 @@
     </select>
 </label>
 }
-<button (click)="calculateChart()">Generate birth chart</button>
 <!-- @if (selectedCityIndex) {
 <div>
     {{ getCityNameByIndex(selectedCityIndex) }}
@@ -87,3 +65,23 @@
 } @else {
 Loading locations...
 }
+<label for="bday-time">
+    Birth time
+    <input id="bday-time" [(ngModel)]="formState.bTime" type="time" (ngModelChange)="setBtime($event)">
+    @if (formState.bTzName) {
+    {{ formState.bTzName }}
+    }
+    @if (timezones) {
+    <label for="birth-tz">
+        Time zone:
+        <select id="birth-tz" [(ngModel)]="formState.bTzName" (ngModelChange)="setBirthTZ($event)">
+            @for (tz of timezones; track tz) {
+            <option value={{tz}}>
+                {{ tz }}
+            </option>
+            }
+        </select>
+    </label>
+    }
+</label>
+<button [disabled]="!formComplete" (click)="calculateChart()">Generate birth chart</button>

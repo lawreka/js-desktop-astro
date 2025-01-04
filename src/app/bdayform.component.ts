@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import moment from 'moment-timezone';
 
 interface City {
     name: string;
@@ -17,7 +18,7 @@ interface State {
 }
 
 interface Timezone {
-    abbreviation?: string;
+    abbreviation: string;
     gmtOffset?: number;
     gmtOffsetName?: string;
     tzName: string;
@@ -27,10 +28,23 @@ interface Timezone {
 interface Country {
     name: string;
     id: string;
+    iso2: string;
     latitude: string;
     longitude: string;
     states: State[];
     timezones: Timezone[];
+}
+
+interface FormState {
+    id: string
+    name: string
+    bDay: string
+    bTime: string
+    bCountry: Country | null
+    bState: State | null
+    bCity: City | null
+    bLoc: { lat: string; lon: string }
+    bTzName: string;
 }
 
 @Component({
@@ -40,26 +54,35 @@ interface Country {
     styleUrl: './bdayform.component.css'
 })
 export class BdayForm implements OnInit {
-    uuid = crypto.randomUUID()
-    name: string = ''
+    formState: FormState = {
+        id: crypto.randomUUID(),
+        name: '',
+        bDay: '',
+        bTime: '',
+        bCountry: null,
+        bState: null,
+        bCity: null,
+        bLoc: { lat: '', lon: '' },
+        bTzName: ''
+    }
+    formComplete = false
+    checkFormComplete() {
+        const complete = Boolean(this.formState.name !== '' && this.formState.bDay !== '' && this.formState.bTime !== '' && this.formState.bLoc.lat !== '' && this.formState.bLoc.lon !== '' && this.formState.bTzName !== '')
+        this.formComplete = complete
+    }
     setName(name: string) {
-        this.name = name
+        this.formState.name = name
+        this.checkFormComplete()
     }
-    birthday: string = ''
     setBday(bday: string) {
-        this.birthday = bday
+        this.formState.bDay = bday
+        this.checkFormComplete()
     }
-    birthtime: string = ''
     setBtime(btime: any) {
-        this.birthtime = btime
+        this.formState.bTime = btime
+        this.checkFormComplete()
     }
-    birthCountry: Country | null = null
-    birthState: State | null = null
-    birthCity: City | null = null
-    birthloc: { lat: string; lon: string } = { lat: '', lon: '' }
-    birthTZ: Timezone | null = null
-    birthTZindex: number | null = null
-    timezones: Timezone[] | null = null
+    timezones: string[] | null = null
     countries: Country[] | null = null
     getCountries() {
         fetch('./countries+states+cities.json')
@@ -91,30 +114,36 @@ export class BdayForm implements OnInit {
         const city = this.cities?.[idx]
         return city?.name || ''
     }
-    resetTimezonesStatesAndCities() {
-        this.birthTZ = null
+    resetCountry() {
+        this.formState.bLoc = { lat: '', lon: '' }
+        this.formState.bTzName = ''
         this.timezones = null
-        this.birthState = null
+        this.formState.bState = null
         this.selectedStateIndex = null
         this.states = null
-        this.birthCity = null
+        this.formState.bCity = null
         this.selectedCityIndex = null
         this.cities = null
     }
-    resetCities() {
-        this.birthCity = null
+    resetState() {
+        this.formState.bCity = null
         this.selectedCityIndex = null
         this.cities = null
+    }
+    displayTimezones(country: Country) {
+        console.log(country)
+        const countryIso = country.iso2
+        const tzs = moment.tz.zonesForCountry(countryIso)
+        if (tzs.length == 1) {
+            this.formState.bTzName = tzs[0]
+        } else {
+            this.timezones = tzs
+        }
     }
     setBirthCountry(country: Country) {
-        this.resetTimezonesStatesAndCities()
-        this.birthCountry = country
-        const timezones = country.timezones
-        if (timezones.length == 1) {
-            this.birthTZ = country.timezones[0]
-        } else {
-            this.timezones = country.timezones
-        }
+        this.resetCountry()
+        this.formState.bCountry = country
+        this.displayTimezones(country)
         const { latitude, longitude } = country
         this.setBirthLoc(latitude, longitude)
         const states = country.states
@@ -123,8 +152,8 @@ export class BdayForm implements OnInit {
         }
     }
     setBirthState(state: State) {
-        this.resetCities()
-        this.birthState = state
+        this.resetState()
+        this.formState.bState = state
         const { latitude, longitude } = state
         this.setBirthLoc(latitude, longitude)
         const cities = state.cities
@@ -133,24 +162,19 @@ export class BdayForm implements OnInit {
         }
     }
     setBirthCity(city: City) {
-        this.birthCity = city
+        this.formState.bCity = city
         const { latitude, longitude } = city
         this.setBirthLoc(latitude, longitude)
     }
     setBirthLoc(latitude: string, longitude: string) {
-        this.birthloc = { lat: latitude, lon: longitude }
+        this.formState.bLoc = { lat: latitude, lon: longitude }
+        this.checkFormComplete()
     }
-    setBirthTZ(timezone: Timezone) {
-        this.birthTZ = timezone
+    setBirthTZ(tz: string) {
+        this.formState.bTzName = tz
+        this.checkFormComplete()
     }
     calculateChart(): void {
-        console.log(this.name)
-        console.log(this.birthday)
-        console.log(this.birthtime)
-        console.log(this.birthCountry)
-        console.log(this.birthState)
-        console.log(this.birthCity)
-        console.log(this.birthloc)
-        console.log(this.birthTZ)
+        console.log(this.formState)
     }
 }
