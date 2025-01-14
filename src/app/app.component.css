@@ -1,18 +1,3 @@
-:host {
-    --darkblue: #010036;
-    --yellow: #f3ff60;
-    --font-big: 48px;
-    --font-medium: 24px;
-    --font-small: 12px;
-}
-
-.main {
-    /* background-color: var(--darkblue);
-    color: var(--yellow); */
-    font-family: monospace;
-    /* font-size: var(--font-big); */
-}
-
 .big {
     font-size: var(--font-big);
 }

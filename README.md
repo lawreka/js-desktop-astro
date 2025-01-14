@@ -4,7 +4,8 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 
 ## Development
 
-```npm start```
+```npm start``` to start frontend
+```npm run server``` to start server for sweph calculations
 
 ## Run in electron
 
