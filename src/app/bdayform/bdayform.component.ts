@@ -1,51 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import moment from 'moment-timezone';
-
-interface City {
-    name: string;
-    id: string;
-    latitude: string;
-    longitude: string;
-}
-
-interface State {
-    name: string;
-    id: string;
-    latitude: string;
-    longitude: string;
-    cities: City[];
-}
-
-interface Timezone {
-    abbreviation: string;
-    gmtOffset?: number;
-    gmtOffsetName?: string;
-    tzName: string;
-    zoneName: string;
-}
-
-interface Country {
-    name: string;
-    id: string;
-    iso2: string;
-    latitude: string;
-    longitude: string;
-    states: State[];
-    timezones: Timezone[];
-}
-
-interface FormState {
-    id: string
-    name: string
-    bDay: string
-    bTime: string
-    bCountry: Country | null
-    bState: State | null
-    bCity: City | null
-    bLoc: { lat: string; lon: string }
-    bTzName: string;
-}
+import { LocationService } from '../service/location.service';
+import { City, State, Country, BdayFormState } from '../types'
 
 @Component({
     selector: 'bday-form',
@@ -54,7 +11,8 @@ interface FormState {
     styleUrl: './bdayform.component.css'
 })
 export class BdayForm implements OnInit {
-    formState: FormState = {
+    locationService = inject(LocationService)
+    formState: BdayFormState = {
         id: crypto.randomUUID(),
         name: '',
         bDay: '',
@@ -84,15 +42,10 @@ export class BdayForm implements OnInit {
     }
     timezones: string[] | null = null
     countries: Country[] | null = null
-    getCountries() {
-        fetch('./countries+states+cities.json')
-            .then((response) => response.json())
-            .then((json) => {
-                // console.log(json)
-                this.countries = json
-                return json
-            }
-            );
+    async getCountries(): Promise<any> {
+        let countries = await this.locationService.getCountries()
+        // console.log(countries)
+        this.countries = countries
     }
     ngOnInit(): void {
         this.getCountries()
@@ -131,7 +84,7 @@ export class BdayForm implements OnInit {
         this.cities = null
     }
     displayTimezones(country: Country) {
-        console.log(country)
+        // console.log(country)
         const countryIso = country.iso2
         const tzs = moment.tz.zonesForCountry(countryIso)
         if (tzs.length == 1) {

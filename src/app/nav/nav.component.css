@@ -1,4 +1,10 @@
 .nav-container {
     display: flex;
-    gap: 16px;
+    justify-content: space-between;
+    padding: 16px;
+}
+
+.nav-section {
+    display: flex;
+    gap: 8px;
 }

@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const { readFileSync } = require('fs');
 
 const sweph = require('sweph')
 
@@ -48,6 +49,12 @@ app.post('/chart', jsonParser, (req, res) => {
     // const houses = sweph.houses()
     res.json({ planetPositions: planetPositions });
 });
+
+app.get('/countries', (_, res) => {
+    const data = readFileSync('./resources/countries+states+cities.json');
+    // console.log(JSON.parse(data));
+    res.json({ countries: JSON.parse(data) })
+})
 
 app.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`);

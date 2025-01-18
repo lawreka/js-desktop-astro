@@ -1,11 +1,8 @@
 import { Component, inject, AfterViewInit } from '@angular/core'
-import { AstroService } from '../astro.service'
-import * as d3 from 'd3'
-
-interface Chart {
-    id: string;
-    name: string;
-}
+import { AstroService } from '../service/astro.service';
+// import { PlanetaryService } from '../service/d3planetary.service';
+import { LocationService } from '../service/location.service';
+import { ChartData } from '../types';
 
 @Component({
     selector: 'app-root',
@@ -14,27 +11,18 @@ interface Chart {
     styleUrl: './home.component.css'
 })
 export class HomeComponent implements AfterViewInit {
-    charts: Chart[] | null = []
+    charts: ChartData[] | null = []
     astroService = inject(AstroService)
-    drawGlobe(): void {
-        let projection;
-        projection = d3.geoOrthographic()
-
-        let graticule = d3.geoGraticule();
-
-        let geoGenerator = d3.geoPath(projection)
-        let svg = d3.select("#globe")
-            .append("svg")
-            .attr('width', '100%')
-            .attr('height', '100%')
-        let path = d3.select("#globe svg")
-            .append("path")
-            .datum(graticule())
-            .attr('d', geoGenerator);
-
+    // planetaryService = inject(PlanetaryService)
+    locationService = inject(LocationService)
+    async getCountries(): Promise<any> {
+        const countries = await this.locationService.getCountries()
+        // console.log(countries);
     }
     ngAfterViewInit(): void {
-        console.log(this.astroService.now)
-        this.drawGlobe()
+        // console.log(this.astroService.now)
+        this.getCountries()
+        // this.planetaryService.drawGlobe()
     }
+
 }

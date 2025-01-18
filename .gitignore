@@ -41,5 +41,5 @@ testem.log
 .DS_Store
 Thumbs.db
 
-# ephemeris
-/public/ephe
+# backend resources (location json, ephemeris)
+/resources
