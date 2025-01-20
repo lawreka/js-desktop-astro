@@ -4,7 +4,7 @@ import * as d3 from 'd3'
 @Injectable({
     providedIn: 'root'
 })
-export class PlanetaryService {
+export class D3PlanetaryService {
     drawGlobe(): void {
         let projection1 = d3.geoOrthographic().scale(100).rotate([0, 135, 0])
         let projection2 = d3.geoOrthographic().scale(150).rotate([0, 135, 0])

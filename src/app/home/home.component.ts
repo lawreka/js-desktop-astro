@@ -1,6 +1,7 @@
 import { Component, inject, AfterViewInit } from '@angular/core'
 import { AstroService } from '../service/astro.service';
-// import { PlanetaryService } from '../service/d3planetary.service';
+// import { D3PlanetaryService } from '../service/d3planetary.service';
+import { ThreePlanetaryService } from '../service/threeplanetary.service';
 import { LocationService } from '../service/location.service';
 import { ChartData } from '../types';
 
@@ -13,7 +14,8 @@ import { ChartData } from '../types';
 export class HomeComponent implements AfterViewInit {
     charts: ChartData[] | null = []
     astroService = inject(AstroService)
-    // planetaryService = inject(PlanetaryService)
+    // planetaryService = inject(D3PlanetaryService)
+    planetaryService = inject(ThreePlanetaryService)
     locationService = inject(LocationService)
     async getCountries(): Promise<any> {
         const countries = await this.locationService.getCountries()
@@ -23,6 +25,7 @@ export class HomeComponent implements AfterViewInit {
         // console.log(this.astroService.now)
         this.getCountries()
         // this.planetaryService.drawGlobe()
+        this.planetaryService.createScene()
     }
 
 }
