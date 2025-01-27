@@ -241,3 +241,30 @@ export const createEarthOrbit = () => {
         earthOrbitLine: orbitLine
     }
 }
+
+export const createEcliptic = () => {
+    const eclipticCurve = new THREE.EllipseCurve(
+        0, 0,
+        10, 10,
+        0, 2 * Math.PI
+    )
+    const eclipticPoints = eclipticCurve.getSpacedPoints(360)
+    const eclipticGeometry = new THREE.BufferGeometry().setFromPoints(eclipticPoints)
+    const eclipticMaterial = new THREE.LineBasicMaterial({
+        color: new THREE.Color(0x00ffff),
+        transparent: true,
+        opacity: 0.4
+    })
+    const eclipticMesh = new THREE.Line(eclipticGeometry, eclipticMaterial)
+    eclipticMesh.rotateX(-Math.PI / 2)
+    return eclipticMesh
+}
+
+export const getDayOfYear = () => {
+    const now = new Date(Date.now())
+    const year = now.getUTCFullYear()
+    const month = now.getUTCMonth()
+    const day = now.getUTCDate()
+    const date = new Date(year, month, day)
+    return (Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) - Date.UTC(date.getFullYear(), 0, 0)) / 24 / 60 / 60 / 1000;
+}
