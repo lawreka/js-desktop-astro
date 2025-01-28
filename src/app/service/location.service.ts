@@ -15,4 +15,8 @@ export class LocationService {
             });
         return countries
     }
+    getUserTimezone(): string {
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone
+        return tz
+    }
 }

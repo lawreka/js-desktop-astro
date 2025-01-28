@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
+import { Loc } from '../types';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AstroService {
-    now = this.getAstroNow()
-    async getAstroNow(): Promise<any> {
+    async getAstroNow(loc: Loc): Promise<any> {
+        console.log(loc)
         const now = new Date(Date.now())
         const year = now.getUTCFullYear()
         const month = now.getUTCMonth() + 1

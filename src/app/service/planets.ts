@@ -188,17 +188,17 @@ export const createEarth = () => {
 
     // earth axis (north and south poles)
 
-    const axisPoints = [
-        new THREE.Vector3(0, earthScale * 1.5, 0),
-        new THREE.Vector3(0, -earthScale * 1.5, 0)
-    ]
-    const axisGeometry = new THREE.BufferGeometry().setFromPoints(axisPoints) // create geometry from axis points
-    const axisMaterial = new THREE.LineBasicMaterial({
-        color: new THREE.Color(0xff0000),
-        transparent: true,
-        opacity: 0.4
-    })
-    const axis = new THREE.Line(axisGeometry, axisMaterial)
+    // const axisPoints = [
+    //     new THREE.Vector3(0, earthScale * 1.5, 0),
+    //     new THREE.Vector3(0, -earthScale * 1.5, 0)
+    // ]
+    // const axisGeometry = new THREE.BufferGeometry().setFromPoints(axisPoints) // create geometry from axis points
+    // const axisMaterial = new THREE.LineBasicMaterial({
+    //     color: new THREE.Color(0xff0000),
+    //     transparent: true,
+    //     opacity: 0.4
+    // })
+    // const axis = new THREE.Line(axisGeometry, axisMaterial)
 
     const clouds = createClouds()
     earthGroup.add(clouds)
@@ -208,7 +208,7 @@ export const createEarth = () => {
     moon.position.set(0.5, 0, 0)
 
     earthGroup.add(earth);
-    earthGroup.add(axis)
+    // earthGroup.add(axis)
     earthGroup.rotation.y = tilt
     return {
         earthGroup,

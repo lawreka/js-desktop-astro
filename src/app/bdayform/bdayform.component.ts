@@ -128,6 +128,6 @@ export class BdayForm implements OnInit {
         this.checkFormComplete()
     }
     calculateChart(): void {
-        console.log(this.formState)
+        // console.log(this.formState)
     }
 }

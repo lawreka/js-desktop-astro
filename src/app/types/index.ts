@@ -13,6 +13,11 @@ export interface State {
     cities: City[];
 }
 
+export interface Loc {
+    lat: string;
+    lon: string;
+}
+
 export interface Timezone {
     abbreviation: string;
     gmtOffset?: number;
@@ -39,14 +44,13 @@ export interface BdayFormState {
     bCountry: Country | null
     bState: State | null
     bCity: City | null
-    bLoc: { lat: string; lon: string }
+    bLoc: Loc
     bTzName: string;
 }
 
 export interface AppData {
-    country: Country | null
-    state: State | null
-    loc: { lat: string; lon: string }
+    loc: Loc
+    tz: string;
 }
 
 export interface ChartData {
@@ -55,5 +59,18 @@ export interface ChartData {
     bDay: string
     bTime: string
     bTzName: string;
-    bLoc: { lat: string; lon: string }
+    bLoc: Loc
+}
+
+export interface LocationFormState {
+    country: Country | null
+    state: State | null
+    city: City | null
+    loc: Loc
+}
+
+export interface Planet {
+    planet: string;
+    lat: number;
+    lon: number;
 }

@@ -14,7 +14,161 @@ import {
     providedIn: 'root'
 })
 export class ThreePlanetaryService {
-    createScene() {
+    createChart(planetaryData: any): void {
+        console.log(planetaryData)
+        const canvasParent = document.getElementById("canvas");
+        if (canvasParent) {
+            const WIDTH = window.innerWidth
+            const HEIGHT = window.innerHeight
+            const VIEW_ANGLE = 30, ASPECT = WIDTH / HEIGHT, NEAR = 0.1, FAR = 10000;
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x000000);
+            // const stars = loader.load(`./stars.jpg`);
+            // scene.background = stars
+            const camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
+            camera.position.set(0, 0, -5)
+            const renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true
+            canvasParent.appendChild(renderer.domElement);
+            camera.lookAt(0, 0, 0)
+            const sunlight = new THREE.PointLight(0xFFFFFF, 2)
+            sunlight.position.set(1, 0, -2)
+            scene.add(sunlight)
+
+            const controls = new OrbitControls(camera, renderer.domElement);
+            controls.update();
+
+            const loader = new THREE.TextureLoader();
+
+            const earthGroup = new THREE.Group
+            const earthGeometry = new THREE.SphereGeometry();
+            const earthMaterial = new THREE.MeshStandardMaterial({
+                map: loader.load("./earth_day_4096.jpg"),
+                bumpMap: loader.load('./earth_bump.png'),
+                emissiveMap: loader.load('./night_lights_modified.png'),
+                emissive: new THREE.Color(0xFFFF9C),
+            })
+            const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+
+            const cloudsMap = loader.load('./earthclouds.png')
+            const cloudsGeometry = new THREE.SphereGeometry(1.005)
+            const cloudsMaterial = new THREE.MeshStandardMaterial({
+                color: new THREE.Color(0xFFFFFF),
+                alphaMap: cloudsMap,
+                transparent: true,
+                opacity: 0.8
+            })
+            const clouds = new THREE.Mesh(cloudsGeometry, cloudsMaterial)
+            earth.position.set(0, 0, 0)
+            clouds.position.set(0, 0, 0)
+
+            earthGroup.add(earth)
+            earthGroup.add(clouds)
+            scene.add(earth)
+            scene.add(clouds)
+
+            const tl = gsap.timeline()
+
+            const cameraAnimation = () => {
+                controls.enabled = false
+                tl.to(camera.position, {
+                    z: -100,
+                    duration: 2,
+                    ease: 'none',
+                    onComplete: function () {
+                        controls.enabled = true
+                    }
+
+                })
+            }
+
+            cameraAnimation()
+
+            const ecliptic = createEcliptic()
+            scene.add(ecliptic)
+
+            function animate() {
+
+                // rotate all bodies on axis
+                earth.rotation.y += 0.001
+                clouds.rotation.y += 0.002
+                // moon.rotation.y += 0.01
+
+
+                controls.update()
+                renderer.render(scene, camera);
+
+            }
+
+            renderer.setAnimationLoop(animate);
+        }
+    }
+    createEarth(): void {
+        const canvasParent = document.getElementById("canvas");
+        if (canvasParent) {
+            const WIDTH = window.innerWidth
+            const HEIGHT = window.innerHeight
+            const VIEW_ANGLE = 30, ASPECT = WIDTH / HEIGHT, NEAR = 0.1, FAR = 10000;
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x000000);
+            // const stars = loader.load(`./stars.jpg`);
+            // scene.background = stars
+            const camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
+            camera.position.set(0, 0, -5)
+            const renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true
+            canvasParent.appendChild(renderer.domElement);
+            camera.lookAt(0, 0, 0)
+
+            const sunlight = new THREE.PointLight(0xFFFFFF, 2)
+            sunlight.position.set(1, 0, -2)
+            scene.add(sunlight)
+
+            const loader = new THREE.TextureLoader();
+
+            const earthGeometry = new THREE.SphereGeometry();
+            const earthMaterial = new THREE.MeshStandardMaterial({
+                map: loader.load("./earth_day_4096.jpg"),
+                bumpMap: loader.load('./earth_bump.png'),
+                emissiveMap: loader.load('./night_lights_modified.png'),
+                emissive: new THREE.Color(0xFFFF9C),
+            })
+            const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+
+            const cloudsMap = loader.load('./earthclouds.png')
+            const cloudsGeometry = new THREE.SphereGeometry(1.005)
+            const cloudsMaterial = new THREE.MeshStandardMaterial({
+                color: new THREE.Color(0xFFFFFF),
+                alphaMap: cloudsMap,
+                transparent: true,
+                opacity: 0.8
+            })
+            const clouds = new THREE.Mesh(cloudsGeometry, cloudsMaterial)
+            earth.position.set(0, 0, 0)
+            clouds.position.set(0, 0, 0)
+
+            scene.add(earth)
+            scene.add(clouds)
+
+            function animate() {
+
+                // rotate all bodies on axis
+                earth.rotation.y += 0.0005
+                clouds.rotation.y += 0.0007
+                // moon.rotation.y += 0.01
+
+
+                // controls.update()
+                renderer.render(scene, camera);
+
+            }
+
+            renderer.setAnimationLoop(animate);
+        }
+    }
+    createScene(): void {
         const canvasParent = document.getElementById("canvas");
 
         if (canvasParent) {

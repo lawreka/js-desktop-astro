@@ -1,0 +1,57 @@
+<div class="locationContainer">
+    <div class="locationForm">
+        <label for="location" class="big">
+            Select your current location
+        </label>
+        @if (countries) {
+        <label for="loc-planet">
+            Planet
+            <select name="loc-planet" id="loc-planet">
+                <option value="">
+                    Earth
+                </option>
+            </select>
+        </label>
+        <label for="loc-country">
+            Country
+            <select name="loc-country" id="loc-country" [(ngModel)]="selectedCountryIndex"
+                (ngModelChange)="setCountry(countries[$event])">
+                @for (country of countries; track country.id; let i = $index) {
+                <option value={{i}}>
+                    {{ country.name }}
+                </option>
+                }
+            </select>
+        </label>
+        @if (selectedCountryIndex && states) {
+        <label for="loc-state">
+            State/Region
+            <select name="loc-state" id="loc-state" [(ngModel)]="selectedStateIndex"
+                (ngModelChange)="setState(countries[selectedCountryIndex].states[$event])">
+                @for (state of states; track state.id; let i = $index) {
+                <option value={{i}}>
+                    {{ state.name }}
+                </option>
+                }
+            </select>
+        </label>
+        }
+        @if (selectedCountryIndex && selectedStateIndex && cities) {
+        <label for="loc-city">
+            City
+            <select name="loc-city" id="loc-city" [(ngModel)]="selectedCityIndex"
+                (ngModelChange)="setCity(countries[selectedCountryIndex].states[selectedStateIndex].cities[$event])">
+                @for (city of cities; track city.name; let i = $index) {
+                <option value={{i}}>
+                    {{ city.name }}
+                </option>
+                }
+            </select>
+        </label>
+        }
+        } @else {
+        Loading locations...
+        }
+        <button class="button submit" [disabled]="!formComplete" (click)="submitLocation()">Save location</button>
+    </div>
+</div>

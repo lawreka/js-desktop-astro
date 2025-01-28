@@ -21,11 +21,6 @@
         }
     </select>
 </label>
-<!-- @if (selectedCountryIndex) {
-<div>
-    {{ getCountryNameByIndex(selectedCountryIndex) }}
-</div>
-} -->
 @if (selectedCountryIndex && states) {
 <label for="bdaylocation-state">
     State/Region
@@ -39,11 +34,6 @@
     </select>
 </label>
 }
-<!-- @if (selectedStateIndex) {
-<div>
-    {{ getStateNameByIndex(selectedStateIndex) }}
-</div>
-} -->
 @if (selectedCountryIndex && selectedStateIndex && cities) {
 <label for="bdaylocation-city">
     City
@@ -57,11 +47,7 @@
     </select>
 </label>
 }
-<!-- @if (selectedCityIndex) {
-<div>
-    {{ getCityNameByIndex(selectedCityIndex) }}
-</div>
-} -->
+
 } @else {
 Loading locations...
 }

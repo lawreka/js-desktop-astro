@@ -1,1 +1,6 @@
-<space></space>
+@if (requestLocation){
+<location-form></location-form>
+<earth></earth>
+} @else if (planetaryData) {
+<chart [planetaryData]="planetaryData"></chart>
+}
